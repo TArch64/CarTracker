@@ -1,0 +1,8 @@
+CREATE TABLE Car (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    color TEXT NOT NULL
+);
+
+all:
+SELECT * FROM Car;
