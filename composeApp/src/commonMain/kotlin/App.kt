@@ -9,25 +9,26 @@ import androidx.compose.ui.Modifier
 import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
 import org.koin.core.module.Module
-import org.koin.dsl.module
 import storage.database.Car
-import storage.database.Database
-import storage.database.DatabaseFactory
+import storage.database.databaseModule
+import storage.repository.CarRepository
+import storage.repository.repositoryModule
 
-val commonModule = module {
-    single { DatabaseFactory(driverFactory = get()) }
-    single { get<DatabaseFactory>().createDatabase() }
-}
+fun buildModules(platformModule: Module): List<Module> = listOf(
+    platformModule,
+    databaseModule,
+    repositoryModule
+)
 
 @Composable
 fun App(platformModule: Module) {
-    KoinApplication(moduleList = { listOf(platformModule, commonModule) }) {
-        val database = koinInject<Database>()
-        val cars: List<Car> = remember { database.carQueries.all().executeAsList() }
+    KoinApplication(moduleList = { buildModules(platformModule) }) {
+        val carRepository: CarRepository = koinInject()
+        val cars: List<Car> = remember { carRepository.all() }
 
         MaterialTheme {
             Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("Hello count ${cars.size + 1}")
+                Text("Hello count ${cars.size}")
             }
         }
     }
