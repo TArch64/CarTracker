@@ -1,4 +1,7 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+val commonComplierFlags = listOf("-Xexpect-actual-classes")
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
@@ -15,7 +18,7 @@ kotlin {
             }
 
             compilerOptions.configure {
-                freeCompilerArgs.add("-Xexpect-actual-classes")
+                freeCompilerArgs.addAll(commonComplierFlags)
             }
         }
     }
@@ -28,11 +31,12 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "ComposeApp"
             isStatic = false // sqldelight has issues with linking to ios app
+            binaryOption("bundleId", "ua.tarch64.car_tracker.CarTracker")
         }
 
         iosTarget.compilations.all {
             compilerOptions.configure {
-                freeCompilerArgs.add("-Xexpect-actual-classes")
+                freeCompilerArgs.addAll(commonComplierFlags)
             }
         }
     }
@@ -105,5 +109,11 @@ sqldelight {
         create("Database") {
             packageName.set("storage.database")
         }
+    }
+}
+
+tasks.withType<KotlinCompile>().all {
+    compilerOptions {
+        freeCompilerArgs.addAll(commonComplierFlags)
     }
 }
