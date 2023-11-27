@@ -16,6 +16,8 @@ androidx-espresso-core = "3.5.1"
 kotlin = "1.9.20"
 junit = "4.13.2"
 sqldelight = "2.0.0"
+koin = "3.5.0"
+koin-compose = "1.1.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -36,6 +38,8 @@ androidx-activity-compose = { module = "androidx.activity:activity-compose", ver
 sqldelight-runtime = { module = "app.cash.sqldelight:runtime", version.ref = "sqldelight" }
 sqldelight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
 sqldelight-driver-native = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-compose" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }

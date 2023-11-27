@@ -1,7 +1,9 @@
 import androidx.compose.ui.window.ComposeUIViewController
+import org.koin.dsl.module
 import storage.database.DatabaseDriverFactory
-import storage.database.DatabaseFactory
 
 fun MainViewController() = ComposeUIViewController {
-    App(databaseFactory = DatabaseFactory(DatabaseDriverFactory()))
+    App(platformModule = module {
+        single { DatabaseDriverFactory() }
+    })
 }
