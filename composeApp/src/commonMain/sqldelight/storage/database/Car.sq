@@ -4,5 +4,5 @@ CREATE TABLE Car (
     color TEXT NOT NULL
 );
 
-all:
-SELECT * FROM Car;
+first:
+SELECT * FROM Car LIMIT 1;

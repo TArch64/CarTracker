@@ -1,8 +1,6 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
-val commonComplierFlags = listOf("-Xexpect-actual-classes")
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
@@ -18,7 +16,7 @@ kotlin {
             }
 
             compilerOptions.configure {
-                freeCompilerArgs.addAll(commonComplierFlags)
+                freeCompilerArgs.add("-Xexpect-actual-classes")
             }
         }
     }
@@ -36,7 +34,7 @@ kotlin {
 
         iosTarget.compilations.all {
             compilerOptions.configure {
-                freeCompilerArgs.addAll(commonComplierFlags)
+                freeCompilerArgs.add("-Xexpect-actual-classes")
             }
         }
     }
@@ -116,6 +114,6 @@ sqldelight {
 
 tasks.withType<KotlinCompile>().all {
     compilerOptions {
-        freeCompilerArgs.addAll(commonComplierFlags)
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 }
