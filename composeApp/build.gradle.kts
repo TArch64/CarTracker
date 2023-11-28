@@ -60,6 +60,9 @@ kotlin {
             implementation(libs.sqldelight.runtime)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
         }
     }
 }

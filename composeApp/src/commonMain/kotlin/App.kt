@@ -1,37 +1,29 @@
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.transitions.SlideTransition
 import org.koin.compose.KoinApplication
-import org.koin.compose.koinInject
 import org.koin.core.module.Module
+import screens.cars.carsModule
+import screens.splash.SplashScreen
+import screens.splash.splashScreenModule
 import storage.database.databaseModule
 import storage.repository.repositoryModule
-import viewModel.CarViewModel
-import viewModel.viewModelModule
 
 fun buildModules(platformModule: Module): List<Module> = listOf(
     platformModule,
     databaseModule,
     repositoryModule,
-    viewModelModule
+    splashScreenModule,
+    carsModule
 )
 
 @Composable
 fun App(platformModule: Module) {
     KoinApplication(moduleList = { buildModules(platformModule) }) {
-        val carViewModel: CarViewModel = koinInject()
-
         MaterialTheme {
-            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                if (carViewModel.state == null) {
-                    Text("No car created yet")
-                } else {
-                    Text("Car is created")
-                }
+            Navigator(SplashScreen()) { navigator ->
+                SlideTransition(navigator)
             }
         }
     }
