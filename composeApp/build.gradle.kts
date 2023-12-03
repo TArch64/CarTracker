@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.formBuilder)
 }
 
 kotlin {
@@ -108,6 +109,12 @@ android {
     }
 }
 
+tasks.withType<KotlinCompile>().all {
+    compilerOptions {
+        freeCompilerArgs.add("-Xexpect-actual-classes")
+    }
+}
+
 sqldelight {
     databases {
         create("Database") {
@@ -116,8 +123,6 @@ sqldelight {
     }
 }
 
-tasks.withType<KotlinCompile>().all {
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
+formBuilder {
+    packageName.set("forms")
 }

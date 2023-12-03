@@ -7,6 +7,7 @@ pluginManagement {
         google()
         gradlePluginPortal()
         mavenCentral()
+        mavenLocal()
     }
 }
 
@@ -18,4 +19,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp", ":formBuilder")
+include(":composeApp", ":formBuilder", ":formBuilderPlugin")

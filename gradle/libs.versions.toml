@@ -19,6 +19,8 @@ sqldelight = "2.0.0"
 koin = "3.5.0"
 koin-compose = "1.1.0"
 voyager = "1.0.0-rc10"
+gradle-publush = "1.2.1"
+local-plugin = "1.0.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -51,3 +53,5 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
+pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradle-publush" }
+formBuilder = { id = "ua.tarch64.formBuilderPlugin", version.ref = "local-plugin" }
