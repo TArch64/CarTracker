@@ -25,14 +25,14 @@ kotlin {
         iosX64(),
         iosArm64(),
         iosSimulatorArm64()
-    ).forEach { iosTarget ->
-        iosTarget.binaries.framework {
+    ).forEach {
+        it.binaries.framework {
             baseName = "ComposeApp"
             isStatic = false // sqldelight has issues with linking to ios app
             binaryOption("bundleId", "ua.tarch64.car_tracker.CarTracker")
         }
 
-        iosTarget.compilations.all {
+        it.compilations.all {
             compilerOptions.configure {
                 freeCompilerArgs.add("-Xexpect-actual-classes")
             }
