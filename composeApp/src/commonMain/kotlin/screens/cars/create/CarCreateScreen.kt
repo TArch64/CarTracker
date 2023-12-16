@@ -17,7 +17,7 @@ class CarCreateScreen : AppScreen() {
         val model = getScreenModel<CarCreateModel>()
 
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Form {
+            Form<CarCreateForm>(model = null) {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("No car created yet")
 

@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
@@ -6,6 +8,13 @@ plugins {
 
 group = "ua.tarch64.formBuilder"
 version = "1.0.0"
+
+buildscript {
+    dependencies {
+        classpath(libs.classgraph.core)
+        classpath(libs.classgraph.jvmDriver)
+    }
+}
 
 kotlin {
     jvm()
@@ -34,5 +43,16 @@ android {
 
     defaultConfig {
         minSdk = libs.versions.android.minSdk.get().toInt()
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+}
+
+tasks.withType<KotlinCompile>().all {
+    kotlinOptions {
+        jvmTarget = "17"
     }
 }

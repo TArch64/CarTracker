@@ -14,18 +14,16 @@ androidx-constraintlayout = "2.1.4"
 androidx-test-junit = "1.1.5"
 androidx-espresso-core = "3.5.1"
 kotlin = "1.9.20"
-junit = "4.13.2"
 sqldelight = "2.0.0"
 koin = "3.5.0"
 koin-compose = "1.1.0"
 voyager = "1.0.0-rc10"
-gradle-publush = "1.2.1"
-local-plugin = "1.0.0"
+classgraph = "4.8.165"
+classgraph-jvm-driver = "9.6.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
 compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose" }
 compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose" }
@@ -46,6 +44,9 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin-com
 voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager" }
 voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager" }
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager" }
+classgraph-core = { module = "io.github.classgraph:classgraph", version.ref = "classgraph" }
+classgraph-jvmDriver = { module = "io.github.toolfactory:jvm-driver", version.ref = "classgraph-jvm-driver" }
+kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
@@ -53,5 +54,3 @@ androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
-pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "gradle-publush" }
-formBuilder = { id = "ua.tarch64.formBuilderPlugin", version.ref = "local-plugin" }

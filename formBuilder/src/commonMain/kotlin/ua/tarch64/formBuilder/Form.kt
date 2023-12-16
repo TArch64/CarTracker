@@ -3,6 +3,6 @@ package ua.tarch64.formBuilder
 import androidx.compose.runtime.Composable
 
 @Composable
-fun Form(content: @Composable () -> Unit) {
+fun <Model> Form(model: Model?, content: @Composable () -> Unit) {
     content()
 }

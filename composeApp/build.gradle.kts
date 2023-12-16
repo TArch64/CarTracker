@@ -6,21 +6,11 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.formBuilder)
+    id("ua.tarch64.formBuilder")
 }
 
 kotlin {
-    androidTarget {
-        compilations.all {
-            kotlinOptions {
-                jvmTarget = "1.8"
-            }
-
-            compilerOptions.configure {
-                freeCompilerArgs.add("-Xexpect-actual-classes")
-            }
-        }
-    }
+    androidTarget()
 
     listOf(
         iosX64(),
@@ -31,12 +21,6 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = false // sqldelight has issues with linking to ios app
             binaryOption("bundleId", "ua.tarch64.car_tracker.CarTracker")
-        }
-
-        it.compilations.all {
-            compilerOptions.configure {
-                freeCompilerArgs.add("-Xexpect-actual-classes")
-            }
         }
     }
 
@@ -101,8 +85,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
@@ -113,6 +97,10 @@ tasks.withType<KotlinCompile>().all {
     compilerOptions {
         freeCompilerArgs.add("-Xexpect-actual-classes")
     }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 sqldelight {
@@ -121,8 +109,4 @@ sqldelight {
             packageName.set("storage.database")
         }
     }
-}
-
-formBuilder {
-    packageName.set("forms")
 }
