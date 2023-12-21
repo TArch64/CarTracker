@@ -2,8 +2,6 @@ rootProject.name = "CarTracker"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
-    includeBuild("buildLogic")
-
     repositories {
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
         google()
@@ -21,4 +19,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp", ":formBuilder")
+include(":composeApp", ":formBuilder", ":formBuilderGenerator")

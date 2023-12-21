@@ -19,7 +19,9 @@ class CarCreateScreen : AppScreen() {
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
             Form<CarCreateForm>(model = null) {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("No car created yet")
+                    val num = testKspGen(123)
+
+                    Text("No car created yet $num")
 
                     Spacer(modifier = Modifier.height(16.dp))
 

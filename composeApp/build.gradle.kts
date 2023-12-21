@@ -1,4 +1,6 @@
 import org.jetbrains.compose.ExperimentalComposeLibrary
+import org.jetbrains.kotlin.gradle.dsl.KotlinCommonCompilerOptions
+import org.jetbrains.kotlin.gradle.plugin.HasCompilerOptions
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -6,11 +8,27 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
-    id("ua.tarch64.formBuilder")
+    alias(libs.plugins.ksp)
+}
+
+dependencies {
+    add("kspCommonMainMetadata", project(":formBuilderGenerator"))
+}
+
+fun configureCommonCompilerOptions(options: KotlinCommonCompilerOptions) {
+    options.freeCompilerArgs.add("-Xexpect-actual-classes")
+}
+
+fun configureCommonCompilerOptions(options: HasCompilerOptions<KotlinCommonCompilerOptions>) {
+    options.configure { configureCommonCompilerOptions(this) }
 }
 
 kotlin {
-    androidTarget()
+    androidTarget {
+        compilations.all {
+            configureCommonCompilerOptions(compilerOptions)
+        }
+    }
 
     listOf(
         iosX64(),
@@ -21,34 +39,43 @@ kotlin {
             baseName = "ComposeApp"
             isStatic = false // sqldelight has issues with linking to ios app
             binaryOption("bundleId", "ua.tarch64.car_tracker.CarTracker")
+            configureCommonCompilerOptions(compilation.compilerOptions)
         }
     }
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.ui)
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.sqldelight.driver.android)
+        androidMain.configure {
+            dependencies {
+                implementation(libs.compose.ui)
+                implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.sqldelight.driver.android)
+            }
         }
 
-        iosMain.dependencies {
-            implementation(libs.sqldelight.driver.native)
+        iosMain.configure {
+            dependencies {
+                implementation(libs.sqldelight.driver.native)
+            }
         }
 
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.components.resources)
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
-            api(projects.formBuilder)
+        commonMain.configure {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                @OptIn(ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
+                implementation(libs.sqldelight.runtime)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.transitions)
+                implementation(libs.voyager.koin)
+                api(projects.formBuilder)
+            }
         }
     }
 }
@@ -57,9 +84,11 @@ android {
     namespace = "ua.tarch64.car_tracker"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
-    sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
-    sourceSets["main"].res.srcDirs("src/androidMain/res")
-    sourceSets["main"].resources.srcDirs("src/commonMain/resources")
+    sourceSets.named("main").configure {
+        manifest.srcFile("src/androidMain/AndroidManifest.xml")
+        res.srcDirs("src/androidMain/res")
+        resources.srcDirs("src/commonMain/resources")
+    }
 
     defaultConfig {
         applicationId = "ua.tarch64.car_tracker"
@@ -68,35 +97,39 @@ android {
         versionCode = 1
         versionName = "1.0"
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.compiler.get()
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
     buildTypes {
         getByName("release") {
             isMinifyEnabled = false
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     dependencies {
         debugImplementation(libs.compose.ui.tooling)
     }
 }
 
 tasks.withType<KotlinCompile>().all {
-    compilerOptions {
-        freeCompilerArgs.add("-Xexpect-actual-classes")
-    }
+    configureCommonCompilerOptions(compilerOptions)
 
     kotlinOptions {
         jvmTarget = "17"
