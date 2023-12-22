@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(libs.plugins.kotlinJvm)
+    alias(libs.plugins.kotlinMultiplatform)
 }
 
 group = "ua.tarch64.formBuilderGenerator"
@@ -11,10 +11,21 @@ repositories {
     mavenCentral()
 }
 
-dependencies {
-    implementation(libs.kotlinpoet.core)
-    implementation(libs.kotlinpoet.ksp)
-    implementation(libs.ksp.api)
+kotlin {
+    jvm()
+
+    sourceSets {
+        val jvmMain by getting {
+            kotlin.srcDir("src/main/kotlin")
+            resources.srcDir("src/main/resources")
+
+            dependencies {
+                implementation(libs.kotlinpoet.core)
+                implementation(libs.kotlinpoet.ksp)
+                implementation(libs.ksp.api)
+            }
+        }
+    }
 }
 
 java {

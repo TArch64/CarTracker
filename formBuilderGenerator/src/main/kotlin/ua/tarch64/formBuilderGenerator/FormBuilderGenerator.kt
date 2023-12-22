@@ -16,7 +16,9 @@ class FormBuilderGenerator(
     private val codeGenerator: CodeGenerator,
     private val logger: KSPLogger
 ) : SymbolProcessor {
-    override fun process(resolver: Resolver): List<KSAnnotated> {
+    private var generated = false
+
+    override fun process(resolver: Resolver): List<KSAnnotated> = generate {
         FileSpec
             .builder("screens.cars.create", "CarCreateForm")
             .addFunction(
@@ -31,8 +33,13 @@ class FormBuilderGenerator(
             .writeTo(codeGenerator, Dependencies(true))
 
         val modelInterfaces = getModelInterfaces(resolver)
-        println(modelInterfaces)
-        return emptyList()
+        logger.info(modelInterfaces.map { it.simpleName.toString() }.joinToString(","))
+
+        return@generate emptyList()
+    }
+
+    private fun generate(generate: () -> List<KSAnnotated>): List<KSAnnotated> {
+        return if (generated) emptyList() else generate().also { generated = true }
     }
 
     private fun getModelInterfaces(resolver: Resolver): Set<KSClassDeclaration> {

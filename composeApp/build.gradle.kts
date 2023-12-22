@@ -129,6 +129,10 @@ android {
 }
 
 tasks.withType<KotlinCompile>().all {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+
     configureCommonCompilerOptions(compilerOptions)
 
     kotlinOptions {
