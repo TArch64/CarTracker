@@ -17,11 +17,9 @@ class CarCreateScreen : AppScreen() {
         val model = getScreenModel<CarCreateModel>()
 
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Form<CarCreateForm>(model = null) {
+            Form(model = rememberCarCreateObjectModel(name = "", color = "#000")) {
                 Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    val num = testKspGen(123)
-
-                    Text("No car created yet $num")
+                    Text("No car created yet")
 
                     Spacer(modifier = Modifier.height(16.dp))
 

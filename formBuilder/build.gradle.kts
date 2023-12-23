@@ -9,13 +9,6 @@ plugins {
 group = "ua.tarch64.formBuilder"
 version = "1.0.0"
 
-buildscript {
-    dependencies {
-        classpath(libs.classgraph.core)
-        classpath(libs.classgraph.jvmDriver)
-    }
-}
-
 kotlin {
     jvm()
     androidTarget()

@@ -1,5 +1,5 @@
 package ua.tarch64.formBuilder.annotation
 
-@Retention(AnnotationRetention.RUNTIME)
+@Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
-annotation class FormModel
+annotation class FormObject
