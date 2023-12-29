@@ -8,11 +8,6 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
-    alias(libs.plugins.ksp)
-}
-
-dependencies {
-    add("kspCommonMainMetadata", project(":formBuilderGenerator"))
 }
 
 fun configureCommonCompilerOptions(options: KotlinCommonCompilerOptions) {
@@ -44,38 +39,30 @@ kotlin {
     }
 
     sourceSets {
-        androidMain.configure {
-            dependencies {
-                implementation(libs.compose.ui)
-                implementation(libs.compose.ui.tooling.preview)
-                implementation(libs.androidx.activity.compose)
-                implementation(libs.sqldelight.driver.android)
-            }
+        androidMain.dependencies {
+            implementation(libs.compose.ui)
+            implementation(libs.compose.ui.tooling.preview)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.sqldelight.driver.android)
         }
 
-        iosMain.configure {
-            dependencies {
-                implementation(libs.sqldelight.driver.native)
-            }
+        iosMain.dependencies {
+            implementation(libs.sqldelight.driver.native)
         }
 
-        commonMain.configure {
-            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
-
-            dependencies {
-                implementation(compose.runtime)
-                implementation(compose.foundation)
-                implementation(compose.material)
-                @OptIn(ExperimentalComposeLibrary::class)
-                implementation(compose.components.resources)
-                implementation(libs.sqldelight.runtime)
-                implementation(libs.koin.core)
-                implementation(libs.koin.compose)
-                implementation(libs.voyager.navigator)
-                implementation(libs.voyager.transitions)
-                implementation(libs.voyager.koin)
-                api(projects.formBuilder)
-            }
+        commonMain.dependencies {
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material)
+            @OptIn(ExperimentalComposeLibrary::class)
+            implementation(compose.components.resources)
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.voyager.navigator)
+            implementation(libs.voyager.transitions)
+            implementation(libs.voyager.koin)
+            api(projects.formify)
         }
     }
 }
@@ -129,10 +116,6 @@ android {
 }
 
 tasks.withType<KotlinCompile>().all {
-    if (name != "kspCommonMainKotlinMetadata") {
-        dependsOn("kspCommonMainKotlinMetadata")
-    }
-
     configureCommonCompilerOptions(compilerOptions)
 
     kotlinOptions {

@@ -19,4 +19,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp", ":formBuilder", ":formBuilderGenerator")
+include(":composeApp", ":formify")

@@ -6,7 +6,7 @@ plugins {
     alias(libs.plugins.jetbrainsCompose)
 }
 
-group = "ua.tarch64.formBuilder"
+group = "ua.tarch64.formify"
 version = "1.0.0"
 
 kotlin {
@@ -26,12 +26,13 @@ kotlin {
         commonMain.dependencies {
             implementation(compose.runtime)
             implementation(compose.foundation)
+            implementation(libs.uuid)
         }
     }
 }
 
 android {
-    namespace = "ua.tarch64.formBuilder"
+    namespace = "ua.tarch64.formify"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
