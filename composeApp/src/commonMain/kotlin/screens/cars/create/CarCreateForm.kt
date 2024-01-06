@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import base.form.FormTextField
 import ua.tarch64.formify.control.FormFieldControl
 import ua.tarch64.formify.control.FormObjectControl
 import ua.tarch64.formify.ui.Form
@@ -30,20 +31,10 @@ fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
 
     Form(model = formObject) {
         Column {
-            FormField(
-                field = formObject.getField<String>("name"),
-                error = { Text(it.message) }
-            ) {
-                OutlinedTextField(
-                    value = it.value,
-                    onValueChange = it.setValue,
-                    label = { Text("Name") },
-                    singleLine = true,
-                    interactionSource = it.interactionSource,
-                    modifier = Modifier.fillMaxWidth(),
-                    isError = it.invalid
-                )
-            }
+            FormTextField(
+                label = "Name",
+                field = formObject.getField("name"),
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
