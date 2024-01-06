@@ -1,6 +1,7 @@
 package screens.cars.create
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -15,13 +16,14 @@ class CarCreateScreen : AppScreen() {
         val model = getScreenModel<CarCreateModel>()
 
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                Text("No car created yet")
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 32.dp)
+            ) {
+                Text("No car created yet", style = MaterialTheme.typography.h4)
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 CarCreateForm {
-                    println(it)
                     model.create()
                 }
             }

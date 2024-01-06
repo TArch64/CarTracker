@@ -1,3 +1,4 @@
 TEAM_ID=YX7NQ99KNC
 BUNDLE_ID=ua.tarch64.car_tracker.CarTracker
 APP_NAME=CarTracker
+PRODUCT_NAME=CarTracker

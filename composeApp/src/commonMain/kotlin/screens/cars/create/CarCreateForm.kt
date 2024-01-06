@@ -2,6 +2,7 @@ package screens.cars.create
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
 import androidx.compose.material.OutlinedTextField
@@ -34,7 +35,8 @@ fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
                     onValueChange = it.setValue,
                     label = { Text("Name") },
                     singleLine = true,
-                    interactionSource = it.interactionSource
+                    interactionSource = it.interactionSource,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
@@ -46,11 +48,17 @@ fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
                     onValueChange = it.setValue,
                     label = { Text("Color") },
                     singleLine = true,
-                    interactionSource = it.interactionSource
+                    interactionSource = it.interactionSource,
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 
-            Button(onClick = { onCreate(formObject) }) {
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { onCreate(formObject) }
+            ) {
                 Text("Add Car")
             }
         }

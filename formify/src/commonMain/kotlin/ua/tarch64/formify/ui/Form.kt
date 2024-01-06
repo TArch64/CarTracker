@@ -5,6 +5,6 @@ import ua.tarch64.formify.model.FormObjectControl
 
 @Composable
 fun Form(model: FormObjectControl, content: @Composable () -> Unit) {
-    bindLaunchedEffect(model)
+    initializeControl(model)
     content()
 }

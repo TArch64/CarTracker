@@ -2,26 +2,36 @@ package ua.tarch64.formify.model
 
 import androidx.compose.foundation.interaction.FocusInteraction
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
-import com.benasher44.uuid.Uuid
-import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.takeWhile
 import kotlinx.coroutines.launch
 
-class FormFieldControl<V>(uid: Uuid, initial: V) : FormControl(uid) {
-    constructor(initial: V) : this(uuid4(), initial)
+class FormFieldControl<V>(initial: V) : FormControl() {
+    private val valueState = mutableStateOf(initial)
 
-    val value = mutableStateOf(initial)
-    val touched = mutableStateOf(false)
+    var value: V
+        get() = valueState.value
+
+        set(value) {
+            valueState.value = value
+        }
+
+    private val touchedState = mutableStateOf(false)
+
+    val touched get() = touchedState.value
     val interactionSource = MutableInteractionSource()
 
-    override fun launchedEffect(coroutineScope: CoroutineScope) {
+    @Composable
+    override fun initialize(coroutineScope: CoroutineScope) {
+        super.initialize(coroutineScope)
+
         coroutineScope.launch {
             interactionSource
                 .interactions
                 .takeWhile { it is FocusInteraction.Unfocus }
-                .collect { touched.value = true }
+                .collect { touchedState.value = true }
         }
     }
 }
