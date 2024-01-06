@@ -5,7 +5,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.takeWhile
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import ua.tarch64.formify.validation.FormSuccessValidation
 import ua.tarch64.formify.validation.FormValidation
@@ -22,6 +22,7 @@ class FormFieldControl<V>(
 
         set(value) {
             valueState.value = value
+            if (touched) validate()
         }
 
     private val touchedState = mutableStateOf(false)
@@ -31,17 +32,16 @@ class FormFieldControl<V>(
 
     private val validationState = mutableStateOf<FormValidation>(FormSuccessValidation())
     val validation get() = validationState.value
-    override val isValid: Boolean get() = validation is FormSuccessValidation
+    override val isValid get() = validation is FormSuccessValidation
 
     @Composable
     override fun initialize(coroutineScope: CoroutineScope) {
         super.initialize(coroutineScope)
 
         coroutineScope.launch {
-            interactionSource
-                .interactions
-                .takeWhile { it is FocusInteraction.Unfocus }
-                .collect { touchedState.value = true }
+            interactionSource.interactions.first { it is FocusInteraction.Unfocus }
+            touchedState.value = true
+            validate()
         }
     }
 
