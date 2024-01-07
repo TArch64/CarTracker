@@ -7,12 +7,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import screens.AppScreen
+import screens.splash.SplashScreen
 
 class CarCreateScreen : AppScreen() {
     @Composable
     override fun Content() {
         val model = getScreenModel<CarCreateModel>()
+        val navigator = LocalNavigator.currentOrThrow
 
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
             Column(
@@ -22,7 +26,10 @@ class CarCreateScreen : AppScreen() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                CarCreateForm { model.create(it) }
+                CarCreateForm {
+                    model.create(it)
+                    navigator.replace(SplashScreen())
+                }
             }
         }
     }
