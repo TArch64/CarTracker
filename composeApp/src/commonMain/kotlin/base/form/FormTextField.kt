@@ -10,8 +10,8 @@ import ua.tarch64.formify.ui.FormField
 
 @Composable
 fun FormTextField(
-    field: FormFieldControl<String>,
     label: String,
+    field: FormFieldControl<String>,
     singleLine: Boolean = true,
     modifier: Modifier = Modifier
 ) {
