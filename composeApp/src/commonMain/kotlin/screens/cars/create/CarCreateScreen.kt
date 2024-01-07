@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.koin.getScreenModel
@@ -23,9 +22,7 @@ class CarCreateScreen : AppScreen() {
 
                 Spacer(modifier = Modifier.height(32.dp))
 
-                CarCreateForm {
-                    model.create()
-                }
+                CarCreateForm { model.create(it) }
             }
         }
     }

@@ -1,8 +1,19 @@
 package storage.database
 
+import app.cash.sqldelight.db.SqlDriver
+import storage.database.columnAdapters.ColorColumnAdapter
+
 class DatabaseFactory(private val driverFactory: DatabaseDriverFactory) {
-    fun createDatabase(): Database {
-        val driver = driverFactory.createDriver(Database.Schema, "app.db")
-        return Database(driver)
+    fun createDatabase() = Database(
+        driver = createDriver(),
+        CarAdapter = createCarColumnAdapter()
+    )
+
+    private fun createDriver(): SqlDriver {
+        return driverFactory.createDriver(Database.Schema, "app.db")
     }
+
+    private fun createCarColumnAdapter() = Car.Adapter(
+        colorAdapter = ColorColumnAdapter()
+    )
 }

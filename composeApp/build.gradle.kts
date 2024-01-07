@@ -62,6 +62,8 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.koin)
+            implementation(libs.colormath.core)
+            implementation(libs.colormath.compose)
             api(projects.formify)
         }
     }
