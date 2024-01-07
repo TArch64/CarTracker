@@ -6,5 +6,5 @@ import storage.repository.CarRepository
 class SplashScreenModel(
     private val carRepository: CarRepository
 ): ScreenModel {
-    val hasCar get () = carRepository.first() != null
+    fun getCar() = carRepository.first()
 }

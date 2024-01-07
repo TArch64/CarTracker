@@ -5,6 +5,7 @@ import cafe.adriel.voyager.transitions.SlideTransition
 import org.koin.compose.KoinApplication
 import org.koin.core.module.Module
 import screens.cars.carsModule
+import screens.events.eventsModule
 import screens.splash.SplashScreen
 import screens.splash.splashScreenModule
 import storage.database.databaseModule
@@ -15,7 +16,8 @@ fun buildModules(platformModule: Module): List<Module> = listOf(
     databaseModule,
     repositoryModule,
     splashScreenModule,
-    carsModule
+    carsModule,
+    eventsModule
 )
 
 @Composable
