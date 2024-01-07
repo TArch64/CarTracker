@@ -7,10 +7,9 @@ import ua.tarch64.formify.control.FormObjectControl
 
 class CarCreateModel(private val carRepository: CarRepository): ScreenModel {
     fun create(formObject: FormObjectControl) {
-        val created = carRepository.create(
+        val car = carRepository.create(
             name = formObject.getField<String>("name").value,
             color = formObject.getField<Color>("color").value
         )
-        println()
     }
 }

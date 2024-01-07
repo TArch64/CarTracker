@@ -30,6 +30,10 @@ class FormFieldControl<V>(
     val touched get() = touchedState.value
     val interactionSource = MutableInteractionSource()
 
+    fun markAsTouched() {
+        touchedState.value = true
+    }
+
     private val validationState = mutableStateOf<FormValidation>(FormSuccessValidation())
     val validation get() = validationState.value
     override val isValid get() = validation is FormSuccessValidation
@@ -40,12 +44,13 @@ class FormFieldControl<V>(
 
         coroutineScope.launch {
             interactionSource.interactions.first { it is FocusInteraction.Unfocus }
-            touchedState.value = true
+            markAsTouched()
             validate()
         }
     }
 
     override fun validate() {
+        markAsTouched()
         if (validator != null) validationState.value = validator.validate(value)
     }
 }
