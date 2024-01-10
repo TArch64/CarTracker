@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import base.Constants
 import base.form.FormColorSwatches
+import base.form.FormNumberField
 import base.form.FormTextField
 import ua.tarch64.formify.control.FormFieldControl
 import ua.tarch64.formify.control.FormObjectControl
@@ -24,7 +25,8 @@ fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
         FormObjectControl(
             controls = mapOf(
                 "name" to FormFieldControl("", FormValidator.NotBlank()),
-                "color" to FormFieldControl(Constants.Car.COLORS.first())
+                "color" to FormFieldControl(Constants.Car.COLORS.first()),
+                "mileage" to FormFieldControl(0)
             )
         )
     }
@@ -42,6 +44,13 @@ fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
                 label = "Color",
                 field = formObject.getField("color"),
                 options = Constants.Car.COLORS
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            FormNumberField(
+                label = "Mileage",
+                field = formObject.getField("mileage")
             )
 
             Spacer(modifier = Modifier.height(24.dp))

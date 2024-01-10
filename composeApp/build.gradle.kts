@@ -129,6 +129,7 @@ sqldelight {
     databases {
         create("Database") {
             packageName.set("storage.database")
+            deriveSchemaFromMigrations.set(true)
         }
     }
 }

@@ -1,6 +1,8 @@
 package storage.database
 
 import app.cash.sqldelight.db.SqlDriver
+import migrations.Car
+import storage.database.columnAdapters.CarMileageColumnAdapter
 import storage.database.columnAdapters.ColorColumnAdapter
 
 class DatabaseFactory(private val driverFactory: DatabaseDriverFactory) {
@@ -14,6 +16,7 @@ class DatabaseFactory(private val driverFactory: DatabaseDriverFactory) {
     }
 
     private fun createCarColumnAdapter() = Car.Adapter(
-        colorAdapter = ColorColumnAdapter()
+        colorAdapter = ColorColumnAdapter(),
+        mileageAdapter = CarMileageColumnAdapter()
     )
 }

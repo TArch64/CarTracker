@@ -1,16 +1,8 @@
-import androidx.compose.ui.graphics.Color;
-
-CREATE TABLE Car (
-    id INTEGER PRIMARY KEY NOT NULL,
-    name TEXT NOT NULL,
-    color TEXT AS Color NOT NULL
-);
-
 first:
 SELECT * FROM Car LIMIT 1;
 
 create:
-INSERT INTO Car (name, color) VALUES (?, ?);
+INSERT INTO Car (name, color, mileage) VALUES (?, ?, ?);
 
 lastCreatedId:
 SELECT last_insert_rowid();

@@ -1,0 +1,7 @@
+import androidx.compose.ui.graphics.Color;
+
+CREATE TABLE Car (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    color TEXT AS Color NOT NULL
+);

@@ -29,6 +29,7 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import ua.tarch64.formify.control.FormFieldControl
+import ua.tarch64.formify.ui.FormField
 
 @Composable
 private fun FormColorSwatch(color: Color, active: Boolean, onSelect: () -> Unit) {
@@ -78,7 +79,6 @@ private fun FormColorSwatch(color: Color, active: Boolean, onSelect: () -> Unit)
     }
 }
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun FormColorSwatches(
     label: String,
@@ -86,19 +86,22 @@ fun FormColorSwatches(
     options: List<Color>,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = Modifier.fillMaxWidth().then(modifier)) {
-        FormLabel(label, modifier = Modifier.padding(bottom = 8.dp))
+    FormField(field = field) { context ->
+        Column(modifier = Modifier.fillMaxWidth().then(modifier)) {
+            FormLabel(label, modifier = Modifier.padding(bottom = 8.dp))
 
-        FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            for (option in options) {
-                FormColorSwatch(
-                    color = option,
-                    active = option == field.value,
-                    onSelect = { field.value = option }
-                )
+            @OptIn(ExperimentalLayoutApi::class)
+            FlowRow(
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                for (option in options) {
+                    FormColorSwatch(
+                        color = option,
+                        active = option == field.value,
+                        onSelect = { context.setValue(option) }
+                    )
+                }
             }
         }
     }
