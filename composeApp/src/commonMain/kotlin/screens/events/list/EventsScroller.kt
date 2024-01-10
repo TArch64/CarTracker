@@ -6,38 +6,37 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import storage.repository.model.CarMileage
 import kotlin.math.max
 
 @Composable
 fun EventsScroller(
-    initialIndex: Int,
+    initialMileage: CarMileage,
+    initialIndexShift: Int = 1,
     batch: Int,
-    content: @Composable (index: Int) -> Unit
+    content: @Composable (mileage: CarMileage) -> Unit
 ) {
-    val rowState = rememberLazyListState(initialIndex)
+    val rowState = rememberLazyListState(max(initialMileage.index - initialIndexShift, 0))
 
-    val initializedIndexes = remember {
-        mutableStateListOf<Int>().apply {
-            val startIndex = max(initialIndex - batch, 0)
-            val endIndex = initialIndex + batch
-            addAll(startIndex..endIndex)
-        }
+    fun mileagesByRange(fromIndex: Int, toIndex: Int): List<CarMileage> {
+        return (fromIndex..toIndex).map(CarMileage.Companion::byIndex)
+    }
+
+    val mileages = remember {
+        val mileages = mileagesByRange(0, initialMileage.index + batch)
+        mutableStateListOf(*mileages.toTypedArray())
+    }
+
+    fun addRange(fromIndex: Int, toIndex: Int) {
+        mileages.addAll(mileagesByRange(fromIndex, toIndex))
     }
 
     LazyRow(state = rowState) {
-        items(items = initializedIndexes, key = { it }) { index ->
-            if (index != 0 && index == initializedIndexes.first()) {
-                val startIndex = max(index - batch - 1, 0)
-                val endIndex = max(index - 1, 0)
-                initializedIndexes.addAll(startIndex..endIndex)
-            }
+        items(items = mileages, key = { it.index }) { mileage ->
+            content(mileage)
 
-            content(index)
-
-            if (index == initializedIndexes.last()) {
-                val startIndex = index + 1
-                val endIndex = index + 1 + batch
-                initializedIndexes.addAll(startIndex..endIndex)
+            if (mileage.index == mileages.last().index) {
+                addRange(mileage.index + 1, mileage.index + 1 + batch)
             }
         }
     }

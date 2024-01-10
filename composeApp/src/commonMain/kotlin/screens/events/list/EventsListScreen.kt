@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -24,11 +25,9 @@ class EventsListScreen(private val car: Car): AppScreen() {
         Column(modifier = Modifier.fillMaxHeight()) {
             Spacer(modifier = Modifier.weight(1f))
 
-            EventsScroller(initialIndex = 30, batch = 20) { index ->
-                val mileage = index * 1000
-
-                Box(modifier = Modifier.width(100.dp).background(Color.Red)) {
-                    Text(mileage.toString(), color = Color.White)
+            EventsScroller(initialMileage = model.car.mileage, batch = 20) { mileage ->
+                Box(modifier = Modifier.width(100.dp).height(100.dp).background(Color.Red)) {
+                    Text(mileage.value.toString(), color = Color.White)
                 }
             }
         }
