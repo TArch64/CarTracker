@@ -9,6 +9,7 @@ import cafe.adriel.voyager.koin.getScreenModel
 import migrations.Car
 import org.koin.core.parameter.parametersOf
 import screens.AppScreen
+import screens.events.list.part.EventsListPart
 
 class EventsListScreen(private val car: Car): AppScreen() {
     @Composable
@@ -19,7 +20,7 @@ class EventsListScreen(private val car: Car): AppScreen() {
             Spacer(modifier = Modifier.weight(1f))
 
             EventsScroller(initialMileage = model.car.mileage, batch = 20) { mileage ->
-                EventsListPart(mileage = mileage)
+                EventsListPart(car = car, mileage = mileage)
             }
         }
     }

@@ -56,6 +56,7 @@ kotlin {
             implementation(compose.material)
             @OptIn(ExperimentalComposeLibrary::class)
             implementation(compose.components.resources)
+
             implementation(libs.sqldelight.runtime)
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -64,6 +65,8 @@ kotlin {
             implementation(libs.voyager.koin)
             implementation(libs.colormath.core)
             implementation(libs.colormath.compose)
+            implementation(libs.composeIcons.tablerIcons)
+
             api(projects.formify)
         }
     }

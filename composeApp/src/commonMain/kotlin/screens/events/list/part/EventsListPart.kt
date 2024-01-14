@@ -1,4 +1,4 @@
-package screens.events.list
+package screens.events.list.part
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -13,13 +13,18 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import migrations.Car
 import storage.repository.model.CarMileage
 
 @Composable
-fun EventsListPart(mileage: CarMileage) {
+fun EventsListPart(car: Car, mileage: CarMileage) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Box {
             Text(mileage.humanReadable)
+
+            if (car.mileage.index == mileage.index) {
+                EventsCar()
+            }
         }
 
         Spacer(modifier = Modifier.height(5.dp))

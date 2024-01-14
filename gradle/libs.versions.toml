@@ -20,6 +20,7 @@ koin-compose = "1.1.0"
 voyager = "1.0.0-rc10"
 uuid = "0.8.2"
 colormath = "3.3.3"
+composeIcons = "1.1.0"
 
 [libraries]
 compose-ui = { module = "androidx.compose.ui:ui", version.ref = "compose" }
@@ -45,6 +46,7 @@ voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voy
 uuid = { module = "com.benasher44:uuid", version.ref = "uuid" }
 colormath-core = { module = "com.github.ajalt.colormath:colormath", version.ref = "colormath" }
 colormath-compose = { module = "com.github.ajalt.colormath:colormath-ext-jetpack-compose", version.ref = "colormath" }
+composeIcons-tablerIcons = { module = "br.com.devsrsouza.compose.icons:tabler-icons", version.ref = "composeIcons" }
 
 [plugins]
 jetbrainsCompose = { id = "org.jetbrains.compose", version.ref = "compose-plugin" }
