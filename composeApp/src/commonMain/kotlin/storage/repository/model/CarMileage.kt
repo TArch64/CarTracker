@@ -8,4 +8,5 @@ class CarMileage(val value: Int) {
     }
 
     val index: Int get() = value.floorDiv(INDEX_SIZE)
+    val humanReadable: String get() = "${value / INDEX_SIZE}k"
 }
