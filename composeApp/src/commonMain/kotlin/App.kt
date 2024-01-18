@@ -10,6 +10,7 @@ import screens.splash.SplashScreen
 import screens.splash.splashScreenModule
 import storage.database.databaseModule
 import storage.repository.repositoryModule
+import ua.tarch64.composeQuery.ComposeQueryProvider
 
 fun buildModules(platformModule: Module): List<Module> = listOf(
     platformModule,
@@ -23,9 +24,11 @@ fun buildModules(platformModule: Module): List<Module> = listOf(
 @Composable
 fun App(platformModule: Module) {
     KoinApplication(moduleList = { buildModules(platformModule) }) {
-        MaterialTheme {
-            Navigator(SplashScreen()) { navigator ->
-                SlideTransition(navigator)
+        ComposeQueryProvider {
+            MaterialTheme {
+                Navigator(SplashScreen()) { navigator ->
+                    SlideTransition(navigator)
+                }
             }
         }
     }

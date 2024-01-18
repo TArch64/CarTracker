@@ -19,4 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp", ":formify")
+include(":composeApp")
+include(":formify")
+include(":composeQuery")

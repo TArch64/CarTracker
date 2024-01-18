@@ -68,6 +68,7 @@ kotlin {
             implementation(libs.composeIcons.tablerIcons)
 
             api(projects.formify)
+            api(projects.composeQuery)
         }
     }
 }
