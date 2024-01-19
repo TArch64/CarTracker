@@ -10,7 +10,7 @@ import cafe.adriel.voyager.koin.getScreenModel
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import screens.AppScreen
-import screens.splash.SplashScreen
+import screens.SplashScreen
 
 class CarCreateScreen : AppScreen() {
     @Composable
