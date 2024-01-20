@@ -5,9 +5,9 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import ua.tarch64.composeQuery.store.QueryKey
-import ua.tarch64.composeQuery.store.QueryLoader
-import ua.tarch64.composeQuery.store.QueryResult
+import ua.tarch64.composeQuery.query.QueryKey
+import ua.tarch64.composeQuery.query.QueryLoader
+import ua.tarch64.composeQuery.query.QueryResult
 
 typealias QueryLoadingContent = @Composable () -> Unit
 typealias QueryErrorContent = @Composable (exception: Throwable) -> Unit
@@ -21,7 +21,7 @@ fun <D> Query(
     error: QueryErrorContent = {},
     content: QueryContent<D>
 ) {
-    val store = LocalComposeQueryStore.current
+    val store = LocalQueryStore.currentOrThrow
     val subscription = remember { store.watchQuery(key, query) }
     val state by subscription.stateFlow.collectAsState()
 

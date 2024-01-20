@@ -1,4 +1,4 @@
-package ua.tarch64.composeQuery.store
+package ua.tarch64.composeQuery.query
 
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,11 +22,11 @@ data class QuerySource<D>(
     }
 
     suspend fun loadQuery() {
-        try {
-            mutableStateFlow.tryEmit(QueryResult.Loading())
-            mutableStateFlow.tryEmit(QueryResult.Loaded(loader()))
+        val result = try {
+            QueryResult.Loaded(loader())
         } catch (error: Throwable) {
-            mutableStateFlow.tryEmit(QueryResult.Error(error))
+            QueryResult.Error(error)
         }
+        mutableStateFlow.tryEmit(result)
     }
 }

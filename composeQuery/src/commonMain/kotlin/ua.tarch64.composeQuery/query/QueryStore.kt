@@ -1,17 +1,13 @@
-package ua.tarch64.composeQuery.store
+package ua.tarch64.composeQuery.query
 
 import com.benasher44.uuid.uuid4
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class QueryStore {
-    private val queries = mutableMapOf<QueryKey, QuerySource<*>>()
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private val coroutineScope = CoroutineScope(GlobalScope.coroutineContext)
-
+class QueryStore(
+    private val queries: MutableMap<QueryKey, QuerySource<*>>,
+    private val coroutineScope: CoroutineScope
+) {
     fun <D> watchQuery(key: QueryKey, loader: QueryLoader<D>): QuerySubscription<D> {
         val source = initQuerySource(key, loader)
 
@@ -40,5 +36,19 @@ class QueryStore {
         if (!source.hasSubscriptions) {
             queries.remove(source.key)
         }
+    }
+
+    fun invalidateQuery(key: QueryKey) {
+        val source = queries[key]
+
+        if (source != null) {
+            coroutineScope.launch {
+                source.loadQuery()
+            }
+        }
+    }
+
+    fun invalidateQuery(keys: Set<QueryKey>) {
+        keys.forEach(::invalidateQuery)
     }
 }

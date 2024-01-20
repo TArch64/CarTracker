@@ -1,4 +1,4 @@
-package ua.tarch64.composeQuery.store
+package ua.tarch64.composeQuery.query
 
 import com.benasher44.uuid.Uuid
 import kotlinx.coroutines.flow.StateFlow

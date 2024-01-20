@@ -1,4 +1,4 @@
-package ua.tarch64.composeQuery.store
+package ua.tarch64.composeQuery.query
 
 interface QueryResult<D> {
     class Loading<D>: QueryResult<D>

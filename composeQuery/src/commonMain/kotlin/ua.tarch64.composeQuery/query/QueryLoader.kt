@@ -1,3 +1,3 @@
-package ua.tarch64.composeQuery.store
+package ua.tarch64.composeQuery.query
 
 typealias QueryLoader<D> = suspend () -> D
