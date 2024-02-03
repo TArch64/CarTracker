@@ -7,42 +7,34 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import base.Constants
 import base.form.FormColorSwatches
 import base.form.FormNumberField
 import base.form.FormTextField
-import ua.tarch64.formify.control.FormFieldControl
-import ua.tarch64.formify.control.FormObjectControl
 import ua.tarch64.formify.ui.Form
-import ua.tarch64.formify.validation.FormValidator
 
 @Composable
-fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
-    val formObject = remember {
-        FormObjectControl(
-            controls = mapOf(
-                "name" to FormFieldControl("", FormValidator.NotBlank()),
-                "color" to FormFieldControl(Constants.Car.COLORS.first()),
-                "mileage" to FormFieldControl(0)
-            )
-        )
-    }
+fun CarCreateForm(onCreate: (form: CarCreateFormObjectImpl) -> Unit) {
+    val formObject = rememberCarCreateFormObject(
+        name = "",
+        color = Constants.Car.COLORS.first(),
+        mileage = 0
+    )
 
     Form(model = formObject) {
         Column {
             FormTextField(
                 label = "Name",
-                field = formObject.getField("name"),
+                field = formObject.nameControl,
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             FormColorSwatches(
                 label = "Color",
-                field = formObject.getField("color"),
+                field = formObject.colorControl,
                 options = Constants.Car.COLORS
             )
 
@@ -50,7 +42,7 @@ fun CarCreateForm(onCreate: (form: FormObjectControl) -> Unit) {
 
             FormNumberField(
                 label = "Mileage",
-                field = formObject.getField("mileage")
+                field = formObject.mileageControl
             )
 
             Spacer(modifier = Modifier.height(24.dp))

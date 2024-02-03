@@ -21,8 +21,8 @@ abstract class FormValidator<V> {
         override fun validate(value: V) = perform(value)
     }
 
-    class NotBlank: FormValidator<CharSequence>() {
-        override fun validate(value: CharSequence) = when {
+    class NotBlank<S: CharSequence>: FormValidator<S>() {
+        override fun validate(value: S) = when {
             value.isNotBlank() -> FormSuccessValidation()
             else -> FormErrorValidation.Text("This field can't be blank")
         }

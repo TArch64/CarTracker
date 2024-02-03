@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 include(":composeApp")
 include(":formify")
+include(":formifyGenerator")
 include(":composeQuery")

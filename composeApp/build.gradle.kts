@@ -8,6 +8,11 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.sqldelight)
+    alias(libs.plugins.ksp)
+}
+
+dependencies {
+    add("kspCommonMainMetadata", project(":formifyGenerator"))
 }
 
 fun configureCommonCompilerOptions(options: KotlinCommonCompilerOptions) {
@@ -39,36 +44,44 @@ kotlin {
     }
 
     sourceSets {
-        androidMain.dependencies {
-            implementation(libs.compose.ui)
-            implementation(libs.compose.ui.tooling.preview)
-            implementation(libs.androidx.activity.compose)
-            implementation(libs.sqldelight.driver.android)
+        androidMain.configure {
+            dependencies {
+                implementation(libs.compose.ui)
+                implementation(libs.compose.ui.tooling.preview)
+                implementation(libs.androidx.activity.compose)
+                implementation(libs.sqldelight.driver.android)
+            }
         }
 
-        iosMain.dependencies {
-            implementation(libs.sqldelight.driver.native)
+        iosMain.configure {
+            dependencies {
+                implementation(libs.sqldelight.driver.native)
+            }
         }
 
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.components.resources)
+        commonMain.configure {
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
 
-            implementation(libs.sqldelight.runtime)
-            implementation(libs.koin.core)
-            implementation(libs.koin.compose)
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.koin)
-            implementation(libs.colormath.core)
-            implementation(libs.colormath.compose)
-            implementation(libs.composeIcons.tablerIcons)
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                @OptIn(ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
 
-            api(projects.formify)
-            api(projects.composeQuery)
+                implementation(libs.sqldelight.runtime)
+                implementation(libs.koin.core)
+                implementation(libs.koin.compose)
+                implementation(libs.voyager.navigator)
+                implementation(libs.voyager.transitions)
+                implementation(libs.voyager.koin)
+                implementation(libs.colormath.core)
+                implementation(libs.colormath.compose)
+                implementation(libs.composeIcons.tablerIcons)
+
+                api(projects.formify)
+                api(projects.composeQuery)
+            }
         }
     }
 }
@@ -122,6 +135,10 @@ android {
 }
 
 tasks.withType<KotlinCompile>().all {
+    if (name != "kspCommonMainKotlinMetadata") {
+        dependsOn("kspCommonMainKotlinMetadata")
+    }
+
     configureCommonCompilerOptions(compilerOptions)
 
     kotlinOptions {

@@ -5,7 +5,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -20,9 +19,14 @@ class CarCreateScreen : AppScreen() {
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
 
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center
+        ) {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 32.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 32.dp)
             ) {
                 Text("No car created yet", style = MaterialTheme.typography.h4)
 
@@ -32,9 +36,9 @@ class CarCreateScreen : AppScreen() {
                     CarCreateForm { form ->
                         mutation.mutate(
                             CarCreateMutationInput(
-                                name = form.getField<String>("name").value,
-                                color = form.getField<Color>("color").value,
-                                mileage = CarMileage(form.getField<Int>("mileage").value)
+                                name = form.nameControl.value,
+                                color = form.colorControl.value,
+                                mileage = CarMileage(form.mileageControl.value)
                             )
                         )
                         navigator.replace(SplashScreen())

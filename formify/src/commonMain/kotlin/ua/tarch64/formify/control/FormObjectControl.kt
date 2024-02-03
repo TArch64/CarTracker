@@ -1,22 +1,24 @@
 package ua.tarch64.formify.control
 
-class FormObjectControl(private val controls: Map<String, FormControl>) : FormControl() {
-    override val isValid: Boolean get() = controls.all { it.value.isValid }
+import androidx.compose.runtime.Composable
+import kotlinx.coroutines.CoroutineScope
+import kotlin.reflect.KProperty0
 
-    fun <V> getField(name: String): FormFieldControl<V> {
-        val field = controls[name] ?: throw Exception("No field with name [$name]")
+abstract class FormObjectControl : FormControl() {
+    override val isValid: Boolean get() = controlRefs.all { it.get().isValid }
 
-        if (field !is FormFieldControl<*>) {
-            throw Exception("Control with name [$name] is not an instance of FormFieldControl")
-        }
+    private lateinit var controlRefs: List<KProperty0<FormControl>>
+    protected abstract fun buildControlRefs(): List<KProperty0<FormControl>>
 
-        @Suppress("UNCHECKED_CAST")
-        return field as FormFieldControl<V>
+    @Composable
+    override fun initialize(coroutineScope: CoroutineScope) {
+        super.initialize(coroutineScope)
+        controlRefs = buildControlRefs()
     }
 
     override fun validate() {
-        for (control in controls.values) {
-            control.validate()
+        for (control in controlRefs) {
+            control.get().validate()
         }
     }
 }
