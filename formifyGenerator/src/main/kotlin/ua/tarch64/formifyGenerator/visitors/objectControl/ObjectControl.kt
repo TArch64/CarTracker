@@ -7,7 +7,8 @@ open class ObjectControl(
     val property: KSPropertyDeclaration,
     val typeClass: KSClassDeclaration
 ) {
-    val name get() = property.simpleName.getShortName()
+    val controlName get() = property.simpleName.getShortName()
+    val name get() = controlName.removeSuffix("Control")
 }
 
 class ObjectFieldControl(

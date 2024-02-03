@@ -17,7 +17,7 @@ import com.squareup.kotlinpoet.dataClassBuilder
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
-import ua.tarch64.formifyGenerator.ANDROIDX_PACKAGE
+import ua.tarch64.formifyGenerator.COMPOSE_RUNTIME_PACKAGE
 import ua.tarch64.formifyGenerator.CONTROL_PACKAGE
 import kotlin.reflect.KProperty0
 
@@ -52,7 +52,7 @@ class ObjectControlVisitor(
 
         FileSpec
             .builder(classDeclaration.toClassName())
-            .addImport(ANDROIDX_PACKAGE, "remember")
+            .addImport(COMPOSE_RUNTIME_PACKAGE, "remember")
             .addFunction(generateObjectFactory())
             .addType(generateObjectImpl())
             .addType(valueClassSpec)
@@ -66,7 +66,7 @@ class ObjectControlVisitor(
 
         return FunSpec
             .builder(objectClassFactoryName)
-            .addAnnotation(ClassName(ANDROIDX_PACKAGE, "Composable"))
+            .addAnnotation(ClassName(COMPOSE_RUNTIME_PACKAGE, "Composable"))
             .addParameters(constructorParameterSpecs)
             .returns(objectClassImplClassName)
             .addStatement(
@@ -106,7 +106,7 @@ class ObjectControlVisitor(
     }
 
     private fun generateControlsMapBuilder(): FunSpec {
-        val controlPairs = objectControls.map { "$INDENT::%N" to it.name }
+        val controlPairs = objectControls.map { "$INDENT::%N" to it.controlName }
         val controlKeys = controlPairs.joinToString(",\n") { it.first }
 
         return FunSpec
@@ -122,9 +122,7 @@ class ObjectControlVisitor(
 
     private fun generateObjectValue(): TypeSpec {
         val parameters = objectControls.filterIsInstance(ObjectFieldControl::class.java).map {
-            val name = it.name.removeSuffix("Control")
-            val type = it.valueTypeClass.toClassName()
-            ParameterSpec.builder(name, type).build()
+            ParameterSpec.builder(it.name, it.valueTypeClass.toClassName()).build()
         }
 
         return TypeSpec.dataClassBuilder(objectClassValueClassName.simpleName, parameters).build()
