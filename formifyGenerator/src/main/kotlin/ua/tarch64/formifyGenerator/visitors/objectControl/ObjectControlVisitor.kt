@@ -21,100 +21,98 @@ import ua.tarch64.formifyGenerator.ANDROIDX_PACKAGE
 import ua.tarch64.formifyGenerator.CONTROL_PACKAGE
 import kotlin.reflect.KProperty0
 
+private const val INDENT = "  "
+
 class ObjectControlVisitor(
     private val controlCollector: ObjectControlCollector,
     private val codeGenerator: CodeGenerator
 ): KSVisitorVoid() {
+    private lateinit var objectClass: KSClassDeclaration
+    private val objectPackageName get() = objectClass.packageName.asString()
+    private val objectClassName get() = objectClass.toClassName().simpleName
+    private val objectClassFactoryName get() = "remember$objectClassName"
+    private val objectClassImplClassName get() = ClassName(objectPackageName, "${objectClassName}Impl")
+    private val objectClassValueClassName get() = ClassName(objectPackageName, "${objectClassName}Value")
+
+    private lateinit var objectControls: List<ObjectControl>
+    private lateinit var constructorParameterSpecs: List<ParameterSpec>
+    private lateinit var valueClassSpec: TypeSpec
+
+    private val controlRefsType get() = List::class.asTypeName().parameterizedBy(
+        KProperty0::class.asTypeName().parameterizedBy(
+            ClassName(CONTROL_PACKAGE, "FormControl")
+        )
+    )
+
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
-        val constructorParameters = generateConstructorParameters(classDeclaration)
-        val objectControls = controlCollector.getObjectControls(classDeclaration)
-        val valueClassSpec = generateObjectValue(classDeclaration, objectControls)
+        objectClass = classDeclaration
+        constructorParameterSpecs = generateConstructorParameters()
+        objectControls = controlCollector.getObjectControls(classDeclaration)
+        valueClassSpec = generateObjectValue()
 
         FileSpec
             .builder(classDeclaration.toClassName())
             .addImport(ANDROIDX_PACKAGE, "remember")
-            .addFunction(generateObjectFactory(classDeclaration, constructorParameters))
-            .addType(generateObjectImpl(
-                objectClass = classDeclaration,
-                parameters = constructorParameters,
-                objectControls = objectControls,
-                valueClassSpec = valueClassSpec
-            ))
+            .addFunction(generateObjectFactory())
+            .addType(generateObjectImpl())
             .addType(valueClassSpec)
             .build()
             .writeTo(codeGenerator, Dependencies(true))
     }
 
-    private fun generateObjectFactory(objectClass: KSClassDeclaration, parameters: List<ParameterSpec>): FunSpec {
-        val factoryName = "remember" + objectClass.simpleName.getShortName()
-        val composableAnnotationName = ClassName(ANDROIDX_PACKAGE, "Composable")
-        val parameterNames = parameters.map { it.name }
-        val parameterSpots = parameterNames.joinToString(",") { "%N" }
-        val objectClassImplName = objectClass.simpleName.getShortName() + "Impl"
-        val objectClassImpl = ClassName(objectClass.packageName.asString(), objectClassImplName)
+    private fun generateObjectFactory(): FunSpec {
+        val parameterNames = constructorParameterSpecs.map { it.name }
+        val parameterSpots = parameterNames.joinToString(", \n") { "$INDENT$INDENT%N" }
 
         return FunSpec
-            .builder(factoryName)
-            .addAnnotation(composableAnnotationName)
-            .addParameters(parameters)
-            .returns(objectClassImpl)
+            .builder(objectClassFactoryName)
+            .addAnnotation(ClassName(ANDROIDX_PACKAGE, "Composable"))
+            .addParameters(constructorParameterSpecs)
+            .returns(objectClassImplClassName)
             .addStatement(
-                "return remember { %N($parameterSpots) }",
-                objectClassImplName,
+                "return remember {\n $INDENT%N(\n$parameterSpots\n$INDENT) \n}",
+                objectClassImplClassName.simpleName,
                 *parameterNames.toTypedArray()
             )
             .build()
     }
 
-    private fun generateObjectImpl(
-        objectClass: KSClassDeclaration,
-        parameters: List<ParameterSpec>,
-        objectControls: List<ObjectControl>,
-        valueClassSpec: TypeSpec
-    ): TypeSpec {
-        val className = objectClass.toClassName().simpleName + "Impl"
-
+    private fun generateObjectImpl(): TypeSpec {
         return TypeSpec
-            .classBuilder(className)
+            .classBuilder(objectClassImplClassName)
             .primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addModifiers(KModifier.INTERNAL)
-                    .addParameters(parameters)
+                    .addParameters(constructorParameterSpecs)
                     .build()
             )
             .superclass(objectClass.toClassName())
             .apply {
-                parameters.forEach { param ->
+                constructorParameterSpecs.forEach { param ->
                     addSuperclassConstructorParameter("%N", param.name)
                 }
             }
-            .addProperty(generateObjectValueGetter(objectClass, valueClassSpec))
-            .addFunction(generateControlsMapBuilder(objectControls))
+            .addProperty(generateObjectValueGetter())
+            .addFunction(generateControlsMapBuilder())
             .build()
     }
 
-    private fun generateConstructorParameters(controlsClass: KSClassDeclaration): List<ParameterSpec> {
-        return controlsClass.primaryConstructor!!.parameters.toList().map {
+    private fun generateConstructorParameters(): List<ParameterSpec> {
+        return objectClass.primaryConstructor!!.parameters.toList().map {
             ParameterSpec
                 .builder(it.name!!.getShortName(), it.type.toTypeName())
                 .build()
         }
     }
 
-    private fun generateControlsMapBuilder(controls: List<ObjectControl>): FunSpec {
-        val controlPairs = controls.map { "    ::%N" to it.name }
+    private fun generateControlsMapBuilder(): FunSpec {
+        val controlPairs = objectControls.map { "$INDENT::%N" to it.name }
         val controlKeys = controlPairs.joinToString(",\n") { it.first }
 
         return FunSpec
             .builder("buildControlRefs")
             .addModifiers(KModifier.OVERRIDE, KModifier.PROTECTED)
-            .returns(
-                List::class.asTypeName().parameterizedBy(
-                    KProperty0::class.asTypeName().parameterizedBy(
-                        ClassName(CONTROL_PACKAGE, "FormControl")
-                    )
-                )
-            )
+            .returns(controlRefsType)
             .addStatement(
                 "return listOf(\n$controlKeys\n)",
                 *controlPairs.map { it.second }.toTypedArray()
@@ -122,25 +120,22 @@ class ObjectControlVisitor(
             .build()
     }
 
-    private fun generateObjectValue(objectClass: KSClassDeclaration, controls: List<ObjectControl>): TypeSpec {
-        val className = objectClass.toClassName().simpleName + "Value"
-
-        val parameters = controls.filterIsInstance(ObjectFieldControl::class.java).map {
+    private fun generateObjectValue(): TypeSpec {
+        val parameters = objectControls.filterIsInstance(ObjectFieldControl::class.java).map {
             val name = it.name.removeSuffix("Control")
             val type = it.valueTypeClass.toClassName()
             ParameterSpec.builder(name, type).build()
         }
 
-        return TypeSpec.dataClassBuilder(className, parameters).build()
+        return TypeSpec.dataClassBuilder(objectClassValueClassName.simpleName, parameters).build()
     }
 
-    private fun generateObjectValueGetter(objectClass: KSClassDeclaration, valueClassSpec: TypeSpec): PropertySpec {
-        val type = ClassName(objectClass.packageName.asString(), valueClassSpec.name!!)
-        val parameterSpots = valueClassSpec.propertySpecs.joinToString(",\n") { "    %N = %NControl.value" }
+    private fun generateObjectValueGetter(): PropertySpec {
+        val parameterSpots = valueClassSpec.propertySpecs.joinToString(",\n") { "$INDENT%N = %NControl.value" }
         val parameterNames = valueClassSpec.propertySpecs.flatMap { listOf(it.name, it.name) }
 
         return PropertySpec
-            .builder("value", type)
+            .builder("value", objectClassValueClassName)
             .getter(
                 FunSpec
                     .getterBuilder()
