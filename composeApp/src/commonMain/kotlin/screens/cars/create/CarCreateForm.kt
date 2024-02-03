@@ -16,7 +16,7 @@ import base.form.FormTextField
 import ua.tarch64.formify.ui.Form
 
 @Composable
-fun CarCreateForm(onCreate: (form: CarCreateFormObjectImpl) -> Unit) {
+fun CarCreateForm(onCreate: (form: CarCreateFormObjectValue) -> Unit) {
     val formObject = rememberCarCreateFormObject(
         name = "",
         color = Constants.Car.COLORS.first(),
@@ -51,7 +51,7 @@ fun CarCreateForm(onCreate: (form: CarCreateFormObjectImpl) -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     formObject.validate()
-                    if (formObject.isValid) onCreate(formObject)
+                    if (formObject.isValid) onCreate(formObject.value)
                 }
             ) {
                 Text("Add Car")

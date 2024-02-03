@@ -36,9 +36,9 @@ class CarCreateScreen : AppScreen() {
                     CarCreateForm { form ->
                         mutation.mutate(
                             CarCreateMutationInput(
-                                name = form.nameControl.value,
-                                color = form.colorControl.value,
-                                mileage = CarMileage(form.mileageControl.value)
+                                name = form.name,
+                                color = form.color,
+                                mileage = CarMileage(form.mileage)
                             )
                         )
                         navigator.replace(SplashScreen())

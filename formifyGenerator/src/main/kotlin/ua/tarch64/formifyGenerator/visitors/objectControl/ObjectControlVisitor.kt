@@ -10,9 +10,10 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.STAR
+import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.asTypeName
+import com.squareup.kotlinpoet.dataClassBuilder
 import com.squareup.kotlinpoet.ksp.toClassName
 import com.squareup.kotlinpoet.ksp.toTypeName
 import com.squareup.kotlinpoet.ksp.writeTo
@@ -26,12 +27,20 @@ class ObjectControlVisitor(
 ): KSVisitorVoid() {
     override fun visitClassDeclaration(classDeclaration: KSClassDeclaration, data: Unit) {
         val constructorParameters = generateConstructorParameters(classDeclaration)
+        val objectControls = controlCollector.getObjectControls(classDeclaration)
+        val valueClassSpec = generateObjectValue(classDeclaration, objectControls)
 
         FileSpec
             .builder(classDeclaration.toClassName())
             .addImport(ANDROIDX_PACKAGE, "remember")
             .addFunction(generateObjectFactory(classDeclaration, constructorParameters))
-            .addType(generateObjectImpl(classDeclaration, constructorParameters))
+            .addType(generateObjectImpl(
+                objectClass = classDeclaration,
+                parameters = constructorParameters,
+                objectControls = objectControls,
+                valueClassSpec = valueClassSpec
+            ))
+            .addType(valueClassSpec)
             .build()
             .writeTo(codeGenerator, Dependencies(true))
     }
@@ -57,7 +66,12 @@ class ObjectControlVisitor(
             .build()
     }
 
-    private fun generateObjectImpl(objectClass: KSClassDeclaration, constructorParameters: List<ParameterSpec>): TypeSpec {
+    private fun generateObjectImpl(
+        objectClass: KSClassDeclaration,
+        parameters: List<ParameterSpec>,
+        objectControls: List<ObjectControl>,
+        valueClassSpec: TypeSpec
+    ): TypeSpec {
         val className = objectClass.toClassName().simpleName + "Impl"
 
         return TypeSpec
@@ -65,16 +79,17 @@ class ObjectControlVisitor(
             .primaryConstructor(
                 FunSpec.constructorBuilder()
                     .addModifiers(KModifier.INTERNAL)
-                    .addParameters(constructorParameters)
+                    .addParameters(parameters)
                     .build()
             )
             .superclass(objectClass.toClassName())
             .apply {
-                constructorParameters.forEach { param ->
+                parameters.forEach { param ->
                     addSuperclassConstructorParameter("%N", param.name)
                 }
             }
-            .addFunction(generateControlsMapBuilder(objectClass))
+            .addProperty(generateObjectValueGetter(objectClass, valueClassSpec))
+            .addFunction(generateControlsMapBuilder(objectControls))
             .build()
     }
 
@@ -86,8 +101,8 @@ class ObjectControlVisitor(
         }
     }
 
-    private fun generateControlsMapBuilder(objectClass: KSClassDeclaration): FunSpec {
-        val controlPairs = controlCollector.getObjectControls(objectClass).map { "    ::%N" to it.name }
+    private fun generateControlsMapBuilder(controls: List<ObjectControl>): FunSpec {
+        val controlPairs = controls.map { "    ::%N" to it.name }
         val controlKeys = controlPairs.joinToString(",\n") { it.first }
 
         return FunSpec
@@ -103,6 +118,38 @@ class ObjectControlVisitor(
             .addStatement(
                 "return listOf(\n$controlKeys\n)",
                 *controlPairs.map { it.second }.toTypedArray()
+            )
+            .build()
+    }
+
+    private fun generateObjectValue(objectClass: KSClassDeclaration, controls: List<ObjectControl>): TypeSpec {
+        val className = objectClass.toClassName().simpleName + "Value"
+
+        val parameters = controls.filterIsInstance(ObjectFieldControl::class.java).map {
+            val name = it.name.removeSuffix("Control")
+            val type = it.valueTypeClass.toClassName()
+            ParameterSpec.builder(name, type).build()
+        }
+
+        return TypeSpec.dataClassBuilder(className, parameters).build()
+    }
+
+    private fun generateObjectValueGetter(objectClass: KSClassDeclaration, valueClassSpec: TypeSpec): PropertySpec {
+        val type = ClassName(objectClass.packageName.asString(), valueClassSpec.name!!)
+        val parameterSpots = valueClassSpec.propertySpecs.joinToString(",\n") { "    %N = %NControl.value" }
+        val parameterNames = valueClassSpec.propertySpecs.flatMap { listOf(it.name, it.name) }
+
+        return PropertySpec
+            .builder("value", type)
+            .getter(
+                FunSpec
+                    .getterBuilder()
+                    .addStatement(
+                        "return %N(\n${parameterSpots}\n)",
+                        valueClassSpec.name!!,
+                        *parameterNames.toTypedArray()
+                    )
+                    .build()
             )
             .build()
     }

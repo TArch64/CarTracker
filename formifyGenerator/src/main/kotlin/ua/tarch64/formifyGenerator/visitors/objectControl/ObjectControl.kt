@@ -3,9 +3,15 @@ package ua.tarch64.formifyGenerator.visitors.objectControl
 import com.google.devtools.ksp.symbol.KSClassDeclaration
 import com.google.devtools.ksp.symbol.KSPropertyDeclaration
 
-data class ObjectControl(
+open class ObjectControl(
     val property: KSPropertyDeclaration,
     val typeClass: KSClassDeclaration
 ) {
     val name get() = property.simpleName.getShortName()
 }
+
+class ObjectFieldControl(
+    property: KSPropertyDeclaration,
+    typeClass: KSClassDeclaration,
+    val valueTypeClass: KSClassDeclaration
+): ObjectControl(property, typeClass)
