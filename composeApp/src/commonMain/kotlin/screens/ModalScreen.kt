@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -48,6 +49,10 @@ abstract class ModalScreen : AppScreen() {
                 }
                 Text(headerTitle, style = MaterialTheme.typography.h6)
                 Box(modifier = Modifier.size(48.dp))
+            }
+
+            Box(modifier = Modifier.padding(all = 15.dp)) {
+                Body()
             }
         }
     }

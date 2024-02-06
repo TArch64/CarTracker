@@ -23,7 +23,7 @@ fun CarCreateForm(onCreate: (form: CarCreateFormObjectValue) -> Unit) {
         mileage = 0
     )
 
-    Form(model = formObject) {
+    Form(form = formObject) {
         Column {
             FormTextField(
                 label = "Name",
@@ -49,10 +49,7 @@ fun CarCreateForm(onCreate: (form: CarCreateFormObjectValue) -> Unit) {
 
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    formObject.validate()
-                    if (formObject.isValid) onCreate(formObject.value)
-                }
+                onClick = handleSubmit { onCreate(formObject.value) }
             ) {
                 Text("Add Car")
             }

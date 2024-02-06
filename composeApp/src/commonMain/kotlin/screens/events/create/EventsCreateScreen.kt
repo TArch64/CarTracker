@@ -10,7 +10,9 @@ class EventsCreateScreen : ModalScreen() {
     @Composable
     override fun Body() {
         RequiredCarQuery { car ->
+            EventsCreateForm { form ->
 
+            }
         }
     }
 }
