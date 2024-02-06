@@ -10,5 +10,6 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 abstract class AppScreen : Screen {
     override val key: ScreenKey = uniqueScreenKey
 
-    val navigator @Composable get() = LocalNavigator.currentOrThrow
+    @Composable
+    fun getNavigator() = LocalNavigator.currentOrThrow
 }

@@ -1,7 +1,7 @@
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator
-import cafe.adriel.voyager.transitions.SlideTransition
+import cafe.adriel.voyager.transitions.FadeTransition
 import org.koin.compose.KoinApplication
 import org.koin.core.module.Module
 import screens.SplashScreen
@@ -21,7 +21,7 @@ fun App(platformModule: Module) {
         ComposeQueryProvider {
             MaterialTheme {
                 Navigator(SplashScreen()) { navigator ->
-                    SlideTransition(navigator)
+                    FadeTransition(navigator)
                 }
             }
         }

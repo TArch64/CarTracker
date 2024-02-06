@@ -8,6 +8,8 @@ import screens.events.list.EventsListScreen
 class SplashScreen : AppScreen() {
     @Composable
     override fun Content() {
+        val navigator = getNavigator()
+
         CarQuery { car ->
             if (car == null) {
                 navigator.replace(CarCreateScreen())

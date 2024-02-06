@@ -1,5 +1,6 @@
 package screens.events.list.part
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,12 +14,17 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import migrations.Car
 import queries.event.EventsQuery
+import screens.events.create.EventsCreateScreen
 import storage.repository.model.Mileage
 
 @Composable
 fun EventsListPart(car: Car, mileage: Mileage) {
+    val navigator = LocalNavigator.currentOrThrow
+
     EventsQuery(mileage) { events ->
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box {
@@ -47,6 +53,11 @@ fun EventsListPart(car: Car, mileage: Mileage) {
                         color = Color.Black,
                         strokeWidth = 12f
                     )
+                }
+                .clickable {
+                    if (events.isEmpty()) {
+                        navigator.push(EventsCreateScreen())
+                    }
                 }
             ) {
                 if (events.isNotEmpty()) {
