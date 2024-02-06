@@ -28,7 +28,7 @@ fun EventsCreateForm(onCreate: (form: EventsCreateFormObjectValue) -> Unit) {
                 modifier = Modifier.fillMaxWidth(),
                 onClick = handleSubmit { onCreate(formObject.value) }
             ) {
-                Text("Add Car")
+                Text("Add Event")
             }
         }
     }

@@ -56,7 +56,7 @@ fun EventsListPart(car: Car, mileage: Mileage) {
                 }
                 .clickable {
                     if (events.isEmpty()) {
-                        navigator.push(EventsCreateScreen())
+                        navigator.push(EventsCreateScreen(mileage))
                     }
                 }
             ) {

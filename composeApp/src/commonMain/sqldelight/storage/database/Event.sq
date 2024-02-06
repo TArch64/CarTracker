@@ -1,3 +1,9 @@
 byMileageRange:
 SELECT * FROM Event
 WHERE Event.mileage >= :from AND Event.mileage < :to;
+
+create:
+INSERT INTO Event (name, carId, mileage) VALUES (:name, :carId, :mileage);
+
+lastCreatedId:
+SELECT last_insert_rowid();
