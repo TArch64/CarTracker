@@ -10,20 +10,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import storage.repository.model.CarMileage
+import storage.repository.model.Mileage
 import kotlin.math.max
 
 @Composable
 fun EventsScroller(
-    initialMileage: CarMileage,
+    initialMileage: Mileage,
     initialIndexShift: Int = 1,
     batch: Int,
-    content: @Composable (mileage: CarMileage) -> Unit
+    content: @Composable (mileage: Mileage) -> Unit
 ) {
     val rowState = rememberLazyListState(max(initialMileage.index - initialIndexShift, 0))
 
-    fun mileagesByRange(fromIndex: Int, toIndex: Int): List<CarMileage> {
-        return (fromIndex..toIndex).map(CarMileage.Companion::byIndex)
+    fun mileagesByRange(fromIndex: Int, toIndex: Int): List<Mileage> {
+        return (fromIndex..toIndex).map(Mileage.Companion::byIndex)
     }
 
     val mileages = remember {

@@ -1,4 +1,4 @@
-package storage.repository
+package storage.repository.base
 
 import storage.database.Database
 

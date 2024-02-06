@@ -4,4 +4,5 @@ import org.koin.dsl.module
 
 val repositoryModule = module {
     single { CarRepository(get()) }
+    single { EventRepository(get()) }
 }

@@ -12,7 +12,7 @@ fun CarQuery(content: QueryContent<Car?>) {
     val carRepository = koinInject<CarRepository>()
 
     Query(
-        key = CarQueryKeys.Car,
+        key = CarQueryKeys.car,
         query = { carRepository.first() },
         content = content
     )

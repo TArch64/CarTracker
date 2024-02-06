@@ -18,7 +18,7 @@ import queries.car.CarCreateMutation
 import queries.car.CarCreateMutationInput
 import screens.AppScreen
 import screens.SplashScreen
-import storage.repository.model.CarMileage
+import storage.repository.model.Mileage
 
 class CarCreateScreen : AppScreen() {
     @Composable
@@ -44,7 +44,7 @@ class CarCreateScreen : AppScreen() {
                             CarCreateMutationInput(
                                 name = form.name,
                                 color = form.color,
-                                mileage = CarMileage(form.mileage)
+                                mileage = Mileage(form.mileage)
                             )
                         )
                         navigator.replace(SplashScreen())

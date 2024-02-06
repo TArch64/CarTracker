@@ -1,0 +1,3 @@
+byMileageRange:
+SELECT * FROM Event
+WHERE Event.mileage >= :from AND Event.mileage < :to;

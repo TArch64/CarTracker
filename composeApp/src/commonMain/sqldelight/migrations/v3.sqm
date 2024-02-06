@@ -1,0 +1,9 @@
+import storage.repository.model.Mileage;
+
+CREATE TABLE Event (
+    id INTEGER PRIMARY KEY NOT NULL,
+    name TEXT NOT NULL,
+    carId INTEGER NOT NULL,
+    mileage INTEGER AS Mileage NOT NULL,
+    FOREIGN KEY (carId) REFERENCES Car(id) ON DELETE CASCADE
+);

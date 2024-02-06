@@ -2,7 +2,7 @@ first:
 SELECT * FROM Car LIMIT 1;
 
 create:
-INSERT INTO Car (name, color, mileage) VALUES (?, ?, ?);
+INSERT INTO Car (name, color, mileage) VALUES (:name, :color, :mileage);
 
 lastCreatedId:
 SELECT last_insert_rowid();

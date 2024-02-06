@@ -14,38 +14,45 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import migrations.Car
-import storage.repository.model.CarMileage
+import queries.event.EventsQuery
+import storage.repository.model.Mileage
 
 @Composable
-fun EventsListPart(car: Car, mileage: CarMileage) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Box {
-            Text(mileage.humanReadable)
+fun EventsListPart(car: Car, mileage: Mileage) {
+    EventsQuery(mileage) { events ->
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Box {
+                Text(mileage.humanReadable)
 
-            if (car.mileage.index == mileage.index) {
-                EventsCar()
+                if (car.mileage.index == mileage.index) {
+                    EventsCar()
+                }
+            }
+
+            Spacer(modifier = Modifier.height(5.dp))
+
+            Box(modifier = Modifier
+                .width(100.dp)
+                .height(100.dp)
+                .drawBehind {
+                    drawLine(
+                        start = Offset(0f, 0f),
+                        end = Offset(size.width, 0f),
+                        color = Color.Black,
+                        strokeWidth = 12f
+                    )
+                    drawLine(
+                        start = Offset(size.width, 0f),
+                        end = Offset(size.width, size.height),
+                        color = Color.Black,
+                        strokeWidth = 12f
+                    )
+                }
+            ) {
+                if (events.isNotEmpty()) {
+                    Text("Events ${events.size}")
+                }
             }
         }
-
-        Spacer(modifier = Modifier.height(5.dp))
-
-        Box(modifier = Modifier
-            .width(100.dp)
-            .height(100.dp)
-            .drawBehind {
-                drawLine(
-                    start = Offset(0f, 0f),
-                    end = Offset(size.width, 0f),
-                    color = Color.Black,
-                    strokeWidth = 12f
-                )
-                drawLine(
-                    start = Offset(size.width, 0f),
-                    end = Offset(size.width, size.height),
-                    color = Color.Black,
-                    strokeWidth = 12f
-                )
-            }
-        )
     }
 }

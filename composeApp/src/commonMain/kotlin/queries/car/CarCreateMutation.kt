@@ -5,14 +5,14 @@ import androidx.compose.ui.graphics.Color
 import migrations.Car
 import org.koin.compose.koinInject
 import storage.repository.CarRepository
-import storage.repository.model.CarMileage
+import storage.repository.model.Mileage
 import ua.tarch64.composeQuery.Mutation
 import ua.tarch64.composeQuery.mutation.MutationContent
 
 data class CarCreateMutationInput(
     val name: String,
     val color: Color,
-    val mileage: CarMileage
+    val mileage: Mileage
 )
 
 @Composable
@@ -29,7 +29,7 @@ fun CarCreateMutation(content: MutationContent<CarCreateMutationInput, Car>) {
         },
 
         onSuccess = { _, context ->
-            context.invalidateQuery(CarQueryKeys.Car)
+            context.invalidateQuery(CarQueryKeys.car)
         },
 
         content = content
